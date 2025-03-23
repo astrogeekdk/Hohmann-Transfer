@@ -70,11 +70,11 @@ v_dir = v_dir / np.linalg.norm(v_dir)
 
 print(v_dir, Earth.v.normalize())
 
-spacecraft = Spacecraft(10e3, Earth.v+v_dir*del_v1, Earth.position)
+spacecraft = Spacecraft(10e3, Earth.v + v_dir*del_v1, Earth.position)
 
-dt = 100000 
+dt = 10000
 
-# mode = ["XY", "XZ", "YZ"]
+mode = "XY"
 
 frame = 0
 
@@ -83,10 +83,18 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        # if event.type == pygame.KEYDOWN:
-        #     if event.key == pygame.K_SPACE:
-        #         spacecraft = Spacecraft(10e3, Earth.v+Earth.v.normalize()*2100, Earth.position)
-
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_1:
+                mode = "XY"
+                screen.fill("black")
+            if event.key == pygame.K_2:
+                mode = "YZ"
+                screen.fill("black")
+            if event.key == pygame.K_3:
+                mode = "XZ"
+                screen.fill("black")
+            # if event.key == pygame.K_SPACE:
+            #     spacecraft = Spacecraft(10e3, Earth.v+Earth.v.normalize()*2100, Earth.position)
 
 
     # screen.fill("black")
@@ -100,25 +108,32 @@ while running:
         planets[i].v += a*dt
         planets[i].position += planets[i].v* dt
 
-    if spacecraft:
         force = (G*spacecraft.mass*Earth.mass/(Earth.position-spacecraft.position).length()**2)*(Earth.position-spacecraft.position).normalize()
         force += (G*spacecraft.mass*SUN_MASS/(sun_position-spacecraft.position).length()**2)*(sun_position-spacecraft.position).normalize()
         force += (G*spacecraft.mass*Mars.mass/(Mars.position-spacecraft.position).length()**2)*(Mars.position-spacecraft.position).normalize()
         a = force/spacecraft.mass
         spacecraft.v += a*dt
         spacecraft.position += spacecraft.v * dt
+
+    if mode=="XY":
+        pygame.draw.circle(screen, (255,255,0), (center.x, center.y), 5)
+        pygame.draw.circle(screen, (0,255,0), (center.x+Earth.position.x*scale, center.y+Earth.position.y*scale), 2)
+        pygame.draw.circle(screen, (255,0,0), (center.x+Mars.position.x*scale, center.y+Mars.position.y*scale), 2)
         pygame.draw.circle(screen, (255,255,255), (center.x+spacecraft.position.x*scale, center.y+spacecraft.position.y*scale), 1)
+    elif mode=="YZ":
+        pygame.draw.circle(screen, (255,255,0), (center.x, center.y), 5)
+        pygame.draw.circle(screen, (0,255,0), (center.x+Earth.position.y*scale, center.y+Earth.position.z*scale), 2)
+        pygame.draw.circle(screen, (255,0,0), (center.x+Mars.position.y*scale, center.y+Mars.position.z*scale), 2)
+        pygame.draw.circle(screen, (255,255,255), (center.x+spacecraft.position.y*scale, center.y+spacecraft.position.z*scale), 1)
+    elif mode=="XZ":
+        pygame.draw.circle(screen, (255,255,0), (center.x, center.y), 5)
+        pygame.draw.circle(screen, (0,255,0), (center.x+Earth.position.x*scale, center.y+Earth.position.z*scale), 2)
+        pygame.draw.circle(screen, (255,0,0), (center.x+Mars.position.x*scale, center.y+Mars.position.z*scale), 2)
+        pygame.draw.circle(screen, (255,255,255), (center.x+spacecraft.position.x*scale, center.y+spacecraft.position.z*scale), 1)
 
-
-
-        
-    pygame.draw.circle(screen, (255,255,0), (center.x, center.y), 5)
-    pygame.draw.circle(screen, (0,255,0), (center.x+Earth.position.x*scale, center.y+Earth.position.y*scale), 2)
-    pygame.draw.circle(screen, (255,0,0), (center.x+Mars.position.x*scale, center.y+Mars.position.y*scale), 2)
-
-
+   
     pygame.display.flip()
 
-    clock.tick(60)
+    clock.tick(200)
 
 pygame.quit()
