@@ -26,6 +26,7 @@ sun, earth, mars = planets['SUN'], planets['EARTH BARYCENTER'], planets['MARS BA
 ts = load.timescale()
 t = ts.now()
 
+
 earth_position = earth.at(t).position.m
 earth_velocity = earth.at(t).velocity.m_per_s
 
@@ -34,7 +35,6 @@ mars_velocity = mars.at(t).velocity.m_per_s
 
 sun_position = sun.at(t).position.m
 sun_position = pygame.Vector3(sun_position[0], sun_position[1], sun_position[2])
-
 
 
 class Planet:
@@ -49,14 +49,15 @@ class Spacecraft:
         self.v = pygame.Vector3(v[0], v[1], v[2])
         self.position = pygame.Vector3(position[0], position[1], position[2])
 
-center = pygame.Vector2(SCREEN_WIDTH//2,SCREEN_HEIGHT//2)
 
+center = pygame.Vector2(SCREEN_WIDTH//2,SCREEN_HEIGHT//2)
 
 Earth = Planet(EARTH_MASS, earth_velocity, earth_position)
 Mars = Planet(MARS_MASS, mars_velocity, mars_position)
 
 
 planets = [Earth, Mars]
+
 
 mu = G*SUN_MASS
 r1 = np.linalg.norm(sun_position - earth_position)
@@ -72,6 +73,7 @@ print(v_dir, Earth.v.normalize())
 
 spacecraft = Spacecraft(10e3, Earth.v + v_dir*del_v1, Earth.position)
 
+t = 0
 dt = 10000
 
 mode = "XY"
@@ -80,6 +82,8 @@ frame = 0
 
 while running:
 
+    t+=dt
+    print(t/86400)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -119,7 +123,8 @@ while running:
         pygame.draw.circle(screen, (255,255,0), (center.x, center.y), 5)
         pygame.draw.circle(screen, (0,255,0), (center.x+Earth.position.x*scale, center.y+Earth.position.y*scale), 2)
         pygame.draw.circle(screen, (255,0,0), (center.x+Mars.position.x*scale, center.y+Mars.position.y*scale), 2)
-        pygame.draw.circle(screen, (255,255,255), (center.x+spacecraft.position.x*scale, center.y+spacecraft.position.y*scale), 1)
+        pygame.draw.circle(screen, (255,255,255), (center.x+spacecraft.position.x*scale, center.y+spacecraft.position.y*scale), 2)
+        
     elif mode=="YZ":
         pygame.draw.circle(screen, (255,255,0), (center.x, center.y), 5)
         pygame.draw.circle(screen, (0,255,0), (center.x+Earth.position.y*scale, center.y+Earth.position.z*scale), 2)
@@ -131,9 +136,8 @@ while running:
         pygame.draw.circle(screen, (255,0,0), (center.x+Mars.position.x*scale, center.y+Mars.position.z*scale), 2)
         pygame.draw.circle(screen, (255,255,255), (center.x+spacecraft.position.x*scale, center.y+spacecraft.position.z*scale), 1)
 
-   
     pygame.display.flip()
 
-    clock.tick(200)
+    clock.tick(100)
 
 pygame.quit()
