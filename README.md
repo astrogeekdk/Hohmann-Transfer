@@ -13,6 +13,8 @@ Simple orbital mechanics simulator that calculates and visualizes Hohmann transf
   - Built with Pygame for visualization.
   - Real ephemeris data from NASA's SPICE DE421 BSP files via Skyfield.
   - Calculate $\Delta v_1$, the initial velocity change required to transition from the starting orbit to the Hohmann transfer ellipse.
+ 
+    
 $$\Delta v_1 = \sqrt{\frac{\mu}{r_1}} \left(\sqrt{\frac{2r_2}{r_1+r_2}}-1\right)$$
 
 
