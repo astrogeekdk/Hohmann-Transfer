@@ -65,11 +65,13 @@ r2 = np.linalg.norm(sun_position - mars_position)
 
 del_v1 = (mu/r1)**0.5 * ((2*r2/(r1+r2))**0.5 - 1)
 
+time_hohmann = np.pi * ((r1+r2)**3/(8*mu))**0.5
+
 r_vec = earth_position - sun_position
 v_dir = np.cross(r_vec, [0,0,1])
 v_dir = v_dir / np.linalg.norm(v_dir)
 
-print(v_dir, Earth.v.normalize())
+# print(v_dir, Earth.v.normalize())
 
 spacecraft = Spacecraft(10e3, Earth.v + v_dir*del_v1, Earth.position)
 
